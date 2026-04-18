@@ -3,6 +3,8 @@ from dataclasses import dataclass
 from datetime import datetime
 from typing import Optional
 
+from domain.entities.role import Role
+
 
 @dataclass
 class TokenPayload:
@@ -10,11 +12,12 @@ class TokenPayload:
     jti: str
     token_type: str
     expires_at: datetime
+    role: Role = Role.CONSULTOR
 
 
 class TokenService(ABC):
     @abstractmethod
-    def create_access_token(self, user_id: str) -> str:
+    def create_access_token(self, user_id: str, role: Role) -> str:
         raise NotImplementedError
 
     @abstractmethod

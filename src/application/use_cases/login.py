@@ -25,6 +25,6 @@ class LoginUseCase:
             raise InactiveUserError()
 
         return TokenDTO(
-            access_token=self._token_svc.create_access_token(user.id),
+            access_token=self._token_svc.create_access_token(user.id, user.role),
             refresh_token=self._token_svc.create_refresh_token(user.id),
         )

@@ -4,6 +4,7 @@ from typing import Optional
 
 import jwt
 
+from domain.entities.role import Role
 from domain.services.token_service import TokenPayload, TokenService
 from infrastructure.config.settings import settings
 
@@ -12,11 +13,12 @@ REFRESH_TOKEN_TYPE = "refresh"
 
 
 class JWTTokenService(TokenService):
-    def create_access_token(self, user_id: str) -> str:
+    def create_access_token(self, user_id: str, role: Role) -> str:
         return self._encode(
             user_id,
             ACCESS_TOKEN_TYPE,
             timedelta(minutes=settings.JWT_ACCESS_TOKEN_EXPIRE_MINUTES),
+            role=role,
         )
 
     def create_refresh_token(self, user_id: str) -> str:
@@ -38,17 +40,19 @@ class JWTTokenService(TokenService):
                 jti=payload["jti"],
                 token_type=payload["type"],
                 expires_at=datetime.fromtimestamp(payload["exp"], tz=timezone.utc),
+                role=Role(payload.get("role", Role.CONSULTOR.value)),
             )
         except (jwt.PyJWTError, KeyError):
             return None
 
     @staticmethod
-    def _encode(user_id: str, token_type: str, delta: timedelta) -> str:
+    def _encode(user_id: str, token_type: str, delta: timedelta, role: Role = Role.CONSULTOR) -> str:
         now = datetime.now(tz=timezone.utc)
         payload = {
             "sub": user_id,
             "type": token_type,
             "jti": str(uuid.uuid4()),
+            "role": role.value,
             "iat": now,
             "exp": now + delta,
         }

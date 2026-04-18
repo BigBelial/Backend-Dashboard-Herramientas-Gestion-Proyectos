@@ -9,6 +9,7 @@ from application.use_cases.exceptions import (
     UserNotFoundError,
 )
 from application.use_cases.get_current_user import GetCurrentUserUseCase
+from domain.entities.role import Role
 from domain.entities.user import User
 from infrastructure.database.mongodb import get_database
 from infrastructure.repositories.mongo_token_blacklist_repository import MongoTokenBlacklistRepository
@@ -50,3 +51,14 @@ async def get_current_user(
             detail=str(exc),
             headers={"WWW-Authenticate": "Bearer"},
         )
+
+
+def require_roles(*roles: Role) -> User:
+    async def _check(current_user: User = Depends(get_current_user)) -> User:
+        if current_user.role not in roles:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail=f"Role '{current_user.role.value}' is not allowed to perform this action",
+            )
+        return current_user
+    return Depends(_check)

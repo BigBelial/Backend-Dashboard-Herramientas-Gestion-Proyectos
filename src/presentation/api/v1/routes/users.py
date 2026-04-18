@@ -11,7 +11,9 @@ from presentation.api.v1.dependencies import (
     get_current_user,
     get_password_svc,
     get_user_repo,
+    require_roles,
 )
+from domain.entities.role import Role
 from presentation.schemas.user_schema import UpdateUserRequest, UserResponse
 
 router = APIRouter(prefix="/users", tags=["users"])
@@ -33,7 +35,7 @@ async def list_users(
     skip: int = Query(0, ge=0),
     limit: int = Query(20, ge=1, le=100),
     user_repo=Depends(get_user_repo),
-    _: User = Depends(get_current_user),
+    _: User = require_roles(Role.ADMIN),
 ):
     users = await ListUsersUseCase(user_repo).execute(skip=skip, limit=limit)
     return ResponseDTO(
