@@ -67,14 +67,19 @@ async def get_user(
     )
 
 
-@router.put("/{user_id}", response_model=ResponseDTO[UserResponse])
+@router.patch("/{user_id}", response_model=ResponseDTO[UserResponse])
 async def update_user(
     user_id: str,
     body: UpdateUserRequest,
     user_repo=Depends(get_user_repo),
     password_svc=Depends(get_password_svc),
-    _: User = Depends(get_current_user),
+    current_user: User = Depends(get_current_user),
 ):
+    if current_user.role != Role.ADMIN and current_user.id != user_id:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="You can only edit your own profile",
+        )
     try:
         user = await UpdateUserUseCase(user_repo, password_svc).execute(
             UpdateUserDTO(
