@@ -23,8 +23,13 @@ def _user_response(user: User) -> UserResponse:
     return UserResponse(
         id=user.id,
         email=user.email,
+        full_name=user.full_name,
         is_active=user.is_active,
         role=user.role.value,
+        phone=user.phone,
+        birth_date=user.birth_date,
+        location=user.location,
+        country=user.country,
         created_at=user.created_at,
         updated_at=user.updated_at,
     )

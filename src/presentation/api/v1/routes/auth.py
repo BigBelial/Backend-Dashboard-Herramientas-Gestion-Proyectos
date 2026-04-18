@@ -15,6 +15,7 @@ from application.use_cases.login import LoginUseCase
 from application.use_cases.logout import LogoutUseCase
 from application.use_cases.refresh_token import RefreshTokenUseCase
 from application.use_cases.register import RegisterUseCase
+from domain.entities.role import Role
 from domain.entities.user import User
 from presentation.api.v1.dependencies import (
     get_blacklist_repo,
@@ -22,8 +23,10 @@ from presentation.api.v1.dependencies import (
     get_password_svc,
     get_token_svc,
     get_user_repo,
+    require_roles,
 )
 from presentation.schemas.auth_schema import (
+    AdminRegisterRequest,
     LoginRequest,
     RefreshTokenRequest,
     RegisterRequest,
@@ -39,8 +42,13 @@ def _user_response(user: User) -> UserResponse:
     return UserResponse(
         id=user.id,
         email=user.email,
+        full_name=user.full_name,
         is_active=user.is_active,
         role=user.role.value,
+        phone=user.phone,
+        birth_date=user.birth_date,
+        location=user.location,
+        country=user.country,
         created_at=user.created_at,
         updated_at=user.updated_at,
     )
@@ -54,7 +62,44 @@ async def register(
 ):
     try:
         user = await RegisterUseCase(user_repo, password_svc).execute(
-            RegisterDTO(email=body.email, password=body.password)
+            RegisterDTO(
+                email=body.email,
+                password=body.password,
+                full_name=body.full_name,
+                phone=body.phone,
+                birth_date=body.birth_date,
+                location=body.location,
+                country=body.country,
+            )
+        )
+    except UserAlreadyExistsError as exc:
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=str(exc))
+    return ResponseDTO(
+        status_code=status.HTTP_201_CREATED,
+        message="User registered successfully",
+        data=_user_response(user),
+    )
+
+
+@router.post("/admin/register", response_model=ResponseDTO[UserResponse], status_code=status.HTTP_201_CREATED)
+async def admin_register(
+    body: AdminRegisterRequest,
+    user_repo=Depends(get_user_repo),
+    password_svc=Depends(get_password_svc),
+    _: User = require_roles(Role.ADMIN),
+):
+    try:
+        user = await RegisterUseCase(user_repo, password_svc).execute(
+            RegisterDTO(
+                email=body.email,
+                password=body.password,
+                full_name=body.full_name,
+                role=body.role,
+                phone=body.phone,
+                birth_date=body.birth_date,
+                location=body.location,
+                country=body.country,
+            )
         )
     except UserAlreadyExistsError as exc:
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=str(exc))

@@ -45,8 +45,13 @@ class MongoUserRepository(UserRepository):
             {"$set": {
                 "email": user.email,
                 "hashed_password": user.hashed_password,
+                "full_name": user.full_name,
                 "is_active": user.is_active,
                 "role": user.role.value,
+                "phone": user.phone,
+                "birth_date": user.birth_date.isoformat() if user.birth_date else None,
+                "location": user.location,
+                "country": user.country,
                 "updated_at": user.updated_at,
             }},
         )
@@ -71,20 +76,33 @@ class MongoUserRepository(UserRepository):
         return {
             "email": user.email,
             "hashed_password": user.hashed_password,
+            "full_name": user.full_name,
             "is_active": user.is_active,
             "role": user.role.value,
+            "phone": user.phone,
+            "birth_date": user.birth_date.isoformat() if user.birth_date else None,
+            "location": user.location,
+            "country": user.country,
             "created_at": user.created_at,
             "updated_at": user.updated_at,
         }
 
     @staticmethod
     def _to_entity(doc: dict) -> User:
+        from datetime import date
+        raw_birth = doc.get("birth_date")
+        birth_date = date.fromisoformat(raw_birth) if isinstance(raw_birth, str) else None
         return User(
             id=str(doc["_id"]),
             email=doc["email"],
             hashed_password=doc["hashed_password"],
+            full_name=doc.get("full_name", ""),
             is_active=doc.get("is_active", True),
             role=Role(doc.get("role", Role.CONSULTOR.value)),
+            phone=doc.get("phone"),
+            birth_date=birth_date,
+            location=doc.get("location"),
+            country=doc.get("country"),
             created_at=doc.get("created_at", datetime.utcnow()),
             updated_at=doc.get("updated_at", datetime.utcnow()),
         )
