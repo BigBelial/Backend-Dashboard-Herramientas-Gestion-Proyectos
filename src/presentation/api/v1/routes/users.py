@@ -1,3 +1,5 @@
+from typing import Optional
+
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 
 from application.dtos.response_dto import ResponseDTO
@@ -39,10 +41,11 @@ def _user_response(user: User) -> UserResponse:
 async def list_users(
     skip: int = Query(0, ge=0),
     limit: int = Query(20, ge=1, le=100),
+    role: Optional[Role] = Query(None),
     user_repo=Depends(get_user_repo),
     _: User = require_roles(Role.ADMIN),
 ):
-    users = await ListUsersUseCase(user_repo).execute(skip=skip, limit=limit)
+    users = await ListUsersUseCase(user_repo).execute(skip=skip, limit=limit, role=role)
     return ResponseDTO(
         status_code=status.HTTP_200_OK,
         message="Users retrieved successfully",
@@ -80,13 +83,24 @@ async def update_user(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="You can only edit your own profile",
         )
+    if body.role is not None and current_user.role != Role.ADMIN:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Only admins can change user roles",
+        )
     try:
         user = await UpdateUserUseCase(user_repo, password_svc).execute(
             UpdateUserDTO(
                 user_id=user_id,
                 email=body.email,
                 password=body.password,
+                full_name=body.full_name,
                 is_active=body.is_active,
+                phone=body.phone,
+                birth_date=body.birth_date,
+                location=body.location,
+                country=body.country,
+                role=body.role,
             )
         )
     except UserNotFoundError as exc:
@@ -104,7 +118,7 @@ async def update_user(
 async def delete_user(
     user_id: str,
     user_repo=Depends(get_user_repo),
-    _: User = Depends(get_current_user),
+    _: User = require_roles(Role.ADMIN),
 ):
     try:
         await DeleteUserUseCase(user_repo).execute(user_id)

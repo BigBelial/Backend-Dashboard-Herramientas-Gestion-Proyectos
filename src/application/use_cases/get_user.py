@@ -1,4 +1,7 @@
+from typing import Optional
+
 from application.use_cases.exceptions import UserNotFoundError
+from domain.entities.role import Role
 from domain.entities.user import User
 from domain.repositories.user_repository import UserRepository
 
@@ -18,5 +21,5 @@ class ListUsersUseCase:
     def __init__(self, user_repo: UserRepository):
         self._user_repo = user_repo
 
-    async def execute(self, skip: int = 0, limit: int = 100) -> list[User]:
-        return await self._user_repo.find_all(skip=skip, limit=limit)
+    async def execute(self, skip: int = 0, limit: int = 100, role: Optional[Role] = None) -> list[User]:
+        return await self._user_repo.find_all(skip=skip, limit=limit, role=role)

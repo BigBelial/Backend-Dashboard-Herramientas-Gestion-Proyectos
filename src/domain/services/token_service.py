@@ -12,7 +12,7 @@ class TokenPayload:
     jti: str
     token_type: str
     expires_at: datetime
-    role: Role = Role.CONSULTOR
+    role: Role = Role.ANALISTA
 
 
 class TokenService(ABC):

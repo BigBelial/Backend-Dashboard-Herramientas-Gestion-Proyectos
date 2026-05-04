@@ -10,7 +10,7 @@ class RegisterDTO:
     email: str
     password: str
     full_name: str
-    role: Role = Role.CONSULTOR
+    role: Role = Role.ANALISTA
     phone: Optional[str] = None
     birth_date: Optional[date] = None
     location: Optional[str] = None

@@ -26,8 +26,9 @@ class MongoUserRepository(UserRepository):
         doc = await self._col.find_one({"_id": oid})
         return self._to_entity(doc) if doc else None
 
-    async def find_all(self, skip: int = 0, limit: int = 100) -> list[User]:
-        cursor = self._col.find({}).skip(skip).limit(limit)
+    async def find_all(self, skip: int = 0, limit: int = 100, role=None) -> list[User]:
+        query = {"role": role.value} if role is not None else {}
+        cursor = self._col.find(query).skip(skip).limit(limit)
         return [self._to_entity(doc) async for doc in cursor]
 
     async def save(self, user: User) -> User:
@@ -98,7 +99,7 @@ class MongoUserRepository(UserRepository):
             hashed_password=doc["hashed_password"],
             full_name=doc.get("full_name", ""),
             is_active=doc.get("is_active", True),
-            role=Role(doc.get("role", Role.CONSULTOR.value)),
+            role=Role(doc.get("role", Role.ANALISTA.value)),
             phone=doc.get("phone"),
             birth_date=birth_date,
             location=doc.get("location"),

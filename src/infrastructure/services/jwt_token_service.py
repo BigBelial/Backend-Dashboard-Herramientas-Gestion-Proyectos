@@ -40,13 +40,13 @@ class JWTTokenService(TokenService):
                 jti=payload["jti"],
                 token_type=payload["type"],
                 expires_at=datetime.fromtimestamp(payload["exp"], tz=timezone.utc),
-                role=Role(payload.get("role", Role.CONSULTOR.value)),
+                role=Role(payload.get("role", Role.ANALISTA.value)),
             )
         except (jwt.PyJWTError, KeyError):
             return None
 
     @staticmethod
-    def _encode(user_id: str, token_type: str, delta: timedelta, role: Role = Role.CONSULTOR) -> str:
+    def _encode(user_id: str, token_type: str, delta: timedelta, role: Role = Role.ANALISTA) -> str:
         now = datetime.now(tz=timezone.utc)
         payload = {
             "sub": user_id,

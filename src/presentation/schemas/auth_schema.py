@@ -24,7 +24,7 @@ class RegisterRequest(BaseModel):
 
 
 class AdminRegisterRequest(RegisterRequest):
-    role: Role = Role.CONSULTOR
+    role: Role = Role.ANALISTA
 
 
 class LoginRequest(BaseModel):

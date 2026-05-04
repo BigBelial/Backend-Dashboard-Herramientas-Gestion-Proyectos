@@ -3,6 +3,8 @@ from typing import Optional
 
 from pydantic import BaseModel, EmailStr, field_validator
 
+from domain.entities.role import Role
+
 
 class UserResponse(BaseModel):
     id: str
@@ -27,6 +29,7 @@ class UpdateUserRequest(BaseModel):
     birth_date: Optional[date] = None
     location: Optional[str] = None
     country: Optional[str] = None
+    role: Optional[Role] = None
 
     @field_validator("password")
     @classmethod

@@ -26,8 +26,26 @@ class UpdateUserUseCase:
         if dto.password:
             user.hashed_password = self._password_svc.hash(dto.password)
 
+        if dto.full_name:
+            user.full_name = dto.full_name
+
         if dto.is_active is not None:
             user.is_active = dto.is_active
+
+        if dto.phone is not None:
+            user.phone = dto.phone
+
+        if dto.birth_date is not None:
+            user.birth_date = dto.birth_date
+
+        if dto.location is not None:
+            user.location = dto.location
+
+        if dto.country is not None:
+            user.country = dto.country
+
+        if dto.role is not None:
+            user.role = dto.role
 
         user.updated_at = datetime.utcnow()
         return await self._user_repo.update(user)

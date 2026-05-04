@@ -11,7 +11,7 @@ class User:
     hashed_password: str
     full_name: str
     is_active: bool = True
-    role: Role = Role.CONSULTOR
+    role: Role = Role.ANALISTA
     phone: Optional[str] = None
     birth_date: Optional[date] = None
     location: Optional[str] = None

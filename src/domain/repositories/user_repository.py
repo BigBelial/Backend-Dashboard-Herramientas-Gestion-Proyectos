@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import Optional
 from domain.entities.user import User
+from domain.entities.role import Role
 
 
 class UserRepository(ABC):
@@ -13,7 +14,7 @@ class UserRepository(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    async def find_all(self, skip: int = 0, limit: int = 100) -> list[User]:
+    async def find_all(self, skip: int = 0, limit: int = 100, role: Optional[Role] = None) -> list[User]:
         raise NotImplementedError
 
     @abstractmethod
