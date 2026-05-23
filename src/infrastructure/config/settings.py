@@ -8,6 +8,7 @@ class Settings(BaseSettings):
 
     MONGODB_URL: str
     MONGODB_DB_NAME: str
+    ANALYTICS_COLLECTION: str = "datos_icfes"
 
     JWT_SECRET_KEY: str
     JWT_ALGORITHM: str = "HS256"

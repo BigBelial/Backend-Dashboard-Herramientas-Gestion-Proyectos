@@ -12,12 +12,17 @@ from application.use_cases.get_current_user import GetCurrentUserUseCase
 from domain.entities.role import Role
 from domain.entities.user import User
 from infrastructure.database.mongodb import get_database
+from infrastructure.repositories.mongo_analytics_repository import MongoAnalyticsRepository
 from infrastructure.repositories.mongo_token_blacklist_repository import MongoTokenBlacklistRepository
 from infrastructure.repositories.mongo_user_repository import MongoUserRepository
 from infrastructure.services.bcrypt_password_service import BcryptPasswordService
 from infrastructure.services.jwt_token_service import JWTTokenService
 
 bearer_scheme = HTTPBearer()
+
+
+def get_analytics_repo(db: AsyncIOMotorDatabase = Depends(get_database)) -> MongoAnalyticsRepository:
+    return MongoAnalyticsRepository(db)
 
 
 def get_user_repo(db: AsyncIOMotorDatabase = Depends(get_database)) -> MongoUserRepository:

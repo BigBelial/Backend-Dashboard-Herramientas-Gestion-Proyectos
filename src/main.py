@@ -9,6 +9,7 @@ from application.dtos.response_dto import ResponseDTO
 from infrastructure.config.settings import settings
 from infrastructure.database.mongodb import close_mongo_connection, connect_to_mongo
 from presentation.api.v1.routes.auth import router as auth_router
+from presentation.api.v1.routes.dashboard import router as dashboard_router
 from presentation.api.v1.routes.users import router as users_router
 
 
@@ -85,3 +86,4 @@ async def generic_exception_handler(request: Request, exc: Exception):
 
 app.include_router(auth_router, prefix=settings.API_PREFIX)
 app.include_router(users_router, prefix=settings.API_PREFIX)
+app.include_router(dashboard_router, prefix=settings.API_PREFIX)
