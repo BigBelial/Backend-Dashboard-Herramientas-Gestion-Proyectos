@@ -11,7 +11,8 @@ from infrastructure.database.mongodb import close_mongo_connection, connect_to_m
 from presentation.api.v1.routes.auth import router as auth_router
 from presentation.api.v1.routes.dashboard import router as dashboard_router
 from presentation.api.v1.routes.users import router as users_router
-
+from presentation.api.v1.routes.ml_insights import router as ml_router
+ 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -87,3 +88,4 @@ async def generic_exception_handler(request: Request, exc: Exception):
 app.include_router(auth_router, prefix=settings.API_PREFIX)
 app.include_router(users_router, prefix=settings.API_PREFIX)
 app.include_router(dashboard_router, prefix=settings.API_PREFIX)
+app.include_router(ml_router, prefix=settings.API_PREFIX)

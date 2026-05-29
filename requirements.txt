@@ -6,3 +6,6 @@ pydantic-settings==2.5.2
 PyJWT==2.9.0
 bcrypt==4.2.0
 python-dotenv==1.0.1
+scikit-learn>=1.4.0
+pandas>=2.2.0
+numpy>=1.26.0

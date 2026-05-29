@@ -17,9 +17,15 @@ from infrastructure.repositories.mongo_token_blacklist_repository import MongoTo
 from infrastructure.repositories.mongo_user_repository import MongoUserRepository
 from infrastructure.services.bcrypt_password_service import BcryptPasswordService
 from infrastructure.services.jwt_token_service import JWTTokenService
+from infrastructure.repositories.mongo_ml_repository import MongoMLRepository
+ 
 
 bearer_scheme = HTTPBearer()
 
+
+def get_ml_repo(db: AsyncIOMotorDatabase = Depends(get_database)) -> MongoMLRepository:
+    """Dependency injection para el repositorio ML."""
+    return MongoMLRepository(db)
 
 def get_analytics_repo(db: AsyncIOMotorDatabase = Depends(get_database)) -> MongoAnalyticsRepository:
     return MongoAnalyticsRepository(db)
