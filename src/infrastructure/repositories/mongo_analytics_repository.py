@@ -39,7 +39,7 @@ class MongoAnalyticsRepository:
         return {
             "$addFields": {
                 "avg_global": {
-                    "$avg": ["$avg_razonamiento", "$avg_lectura_critica", "$avg_ingles"]
+                    "$avg": ["$avg_razonamiento", "$avg_lectura_critica", "$avg_ingles","$avg_escritura","$avg_ciudadanas"]
                 }
             }
         }
@@ -83,6 +83,8 @@ class MongoAnalyticsRepository:
                     "avg_razonamiento": 1,
                     "avg_lectura_critica": 1,
                     "avg_ingles": 1,
+                    "avg_escritura": 1,
+                    "avg_ciudadanas": 1,
                     "avg_global": 1,
                     "total": 1,
                 }
@@ -111,6 +113,8 @@ class MongoAnalyticsRepository:
                     "avg_razonamiento": 1,
                     "avg_lectura_critica": 1,
                     "avg_ingles": 1,
+                    "avg_escritura": 1,
+                    "avg_ciudadanas": 1,
                     "avg_global": 1,
                     "total": 1,
                 }
@@ -139,6 +143,8 @@ class MongoAnalyticsRepository:
                     "avg_razonamiento": 1,
                     "avg_lectura_critica": 1,
                     "avg_ingles": 1,
+                    "avg_escritura": 1,
+                    "avg_ciudadanas": 1,
                     "avg_global": 1,
                     "total": 1,
                 }
@@ -181,6 +187,8 @@ class MongoAnalyticsRepository:
                     "avg_razonamiento": 1,
                     "avg_lectura_critica": 1,
                     "avg_ingles": 1,
+                    "avg_escritura": 1,
+                    "avg_ciudadanas": 1,
                     "avg_global": 1,
                     "total": 1,
                 }
@@ -209,6 +217,8 @@ class MongoAnalyticsRepository:
                     "avg_razonamiento": 1,
                     "avg_lectura_critica": 1,
                     "avg_ingles": 1,
+                    "avg_escritura": 1,
+                    "avg_ciudadanas": 1,
                     "avg_global": 1,
                     "total": 1,
                 }
@@ -235,6 +245,8 @@ class MongoAnalyticsRepository:
                     "avg_razonamiento": 1,
                     "avg_lectura_critica": 1,
                     "avg_ingles": 1,
+                    "avg_escritura": 1,
+                    "avg_ciudadanas": 1,
                     "avg_global": 1,
                     "total": 1,
                 }
@@ -261,6 +273,8 @@ class MongoAnalyticsRepository:
                     "avg_razonamiento": 1,
                     "avg_lectura_critica": 1,
                     "avg_ingles": 1,
+                    "avg_escritura": 1,
+                    "avg_ciudadanas": 1,
                     "avg_global": 1,
                     "total": 1,
                 }
@@ -287,6 +301,8 @@ class MongoAnalyticsRepository:
                     "avg_razonamiento": 1,
                     "avg_lectura_critica": 1,
                     "avg_ingles": 1,
+                    "avg_escritura": 1,
+                    "avg_ciudadanas": 1,
                     "avg_global": 1,
                     "total": 1,
                 }
@@ -313,6 +329,8 @@ class MongoAnalyticsRepository:
                     "avg_razonamiento": 1,
                     "avg_lectura_critica": 1,
                     "avg_ingles": 1,
+                    "avg_escritura": 1,
+                    "avg_ciudadanas": 1,
                     "avg_global": 1,
                     "total": 1,
                 }
@@ -339,6 +357,8 @@ class MongoAnalyticsRepository:
                     "avg_razonamiento": 1,
                     "avg_lectura_critica": 1,
                     "avg_ingles": 1,
+                    "avg_escritura": 1,
+                    "avg_ciudadanas": 1,
                     "avg_global": 1,
                     "total": 1,
                 }
@@ -394,6 +414,8 @@ class MongoAnalyticsRepository:
                     "avg_razonamiento": 1,
                     "avg_lectura_critica": 1,
                     "avg_ingles": 1,
+                    "avg_escritura": 1,
+                    "avg_ciudadanas": 1,
                     "avg_global": 1,
                     "total": 1,
                 }
@@ -460,6 +482,8 @@ class MongoAnalyticsRepository:
                     "avg_razonamiento": 1,
                     "avg_lectura_critica": 1,
                     "avg_ingles": 1,
+                    "avg_escritura": 1,
+                    "avg_ciudadanas": 1,
                     "avg_global": 1,
                     "total": 1,
                 }
@@ -486,6 +510,8 @@ class MongoAnalyticsRepository:
                     "avg_razonamiento": 1,
                     "avg_lectura_critica": 1,
                     "avg_ingles": 1,
+                    "avg_escritura": 1,
+                    "avg_ciudadanas": 1,
                     "avg_global": 1,
                     "total": 1,
                 }

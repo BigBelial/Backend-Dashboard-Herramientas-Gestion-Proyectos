@@ -114,6 +114,9 @@ cp .env.sample .env
 PYTHONPATH=src uvicorn main:app --reload --host 0.0.0.0 --port 8000
 ```
 
+#Windows
+$env:PYTHONPATH="src"; uvicorn main:app --reload --host 0.0.0.0 --port 8000
+
 Si todo va bien, la app estará en:
 
 - API base: `http://localhost:8000/api/v1`
