@@ -39,7 +39,7 @@ class MongoAnalyticsRepository:
         return {
             "$addFields": {
                 "avg_global": {
-                    "$avg": ["$avg_razonamiento", "$avg_lectura_critica", "$avg_ingles"]
+                    "$avg": ["$avg_razonamiento", "$avg_lectura_critica", "$avg_ingles","$avg_escritura","$avg_ciudadanas"]
                 }
             }
         }
