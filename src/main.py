@@ -30,7 +30,9 @@ app = FastAPI(
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
-    allow_credentials=True,
+    # Auth es vía Bearer token (no cookies); el wildcard "*" es inválido con
+    # allow_credentials=True, los navegadores rechazan esa combinación.
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )

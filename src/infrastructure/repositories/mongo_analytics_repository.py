@@ -1,4 +1,3 @@
-from datetime import datetime
 from typing import Optional
 
 from motor.motor_asyncio import AsyncIOMotorDatabase
@@ -406,7 +405,28 @@ class MongoAnalyticsRepository:
             {"$match": match},
             {"$group": {"_id": "$estu_horassemanatrabaja", **self._score_group()}},
             self._add_global(),
-            {"$sort": {"_id": 1}},
+            # Orden lógico por cantidad de horas (no alfabético)
+            {
+                "$addFields": {
+                    "orden": {
+                        "$let": {
+                            "vars": {"h": {"$ifNull": ["$_id", ""]}},
+                            "in": {
+                                "$switch": {
+                                    "branches": [
+                                        {"case": {"$regexMatch": {"input": "$$h", "regex": "[Mm]ás|[Mm]as "}}, "then": 6},
+                                        {"case": {"$regexMatch": {"input": "$$h", "regex": "21"}}, "then": 5},
+                                        {"case": {"$regexMatch": {"input": "$$h", "regex": "11"}}, "then": 4},
+                                        {"case": {"$regexMatch": {"input": "$$h", "regex": "[Mm]enos"}}, "then": 2},
+                                    ],
+                                    "default": 1,
+                                }
+                            },
+                        }
+                    }
+                }
+            },
+            {"$sort": {"orden": 1, "_id": 1}},
             {
                 "$project": {
                     "_id": 0,
@@ -430,9 +450,14 @@ class MongoAnalyticsRepository:
         institucion: Optional[str] = None,
     ) -> list:
         match = self._build_match(periodo, departamento, institucion)
-        now = datetime.utcnow()
         pipeline = [
-            {"$match": {**match, "estu_fechanacimiento": {"$exists": True, "$nin": [None, ""]}}},
+            {
+                "$match": {
+                    **match,
+                    "estu_fechanacimiento": {"$exists": True, "$nin": [None, ""]},
+                    "periodo": {"$exists": True, "$nin": [None, ""]},
+                }
+            },
             {
                 "$addFields": {
                     "birth_parsed": {
@@ -442,20 +467,23 @@ class MongoAnalyticsRepository:
                             "onError": None,
                             "onNull": None,
                         }
-                    }
+                    },
+                    # Año en que el estudiante presentó la prueba (ej. "20183" -> 2018)
+                    "exam_year": {
+                        "$convert": {
+                            "input": {"$substrBytes": ["$periodo", 0, 4]},
+                            "to": "int",
+                            "onError": None,
+                            "onNull": None,
+                        }
+                    },
                 }
             },
-            {"$match": {"birth_parsed": {"$ne": None}}},
+            {"$match": {"birth_parsed": {"$ne": None}, "exam_year": {"$ne": None}}},
             {
                 "$addFields": {
-                    "age": {
-                        "$floor": {
-                            "$divide": [
-                                {"$subtract": [now, "$birth_parsed"]},
-                                1000 * 60 * 60 * 24 * 365.25,
-                            ]
-                        }
-                    }
+                    # Edad al momento de presentar la prueba, no la edad actual
+                    "age": {"$subtract": ["$exam_year", {"$year": "$birth_parsed"}]}
                 }
             },
             {
